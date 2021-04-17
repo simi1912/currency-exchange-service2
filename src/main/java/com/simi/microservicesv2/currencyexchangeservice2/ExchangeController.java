@@ -11,9 +11,11 @@ import java.math.BigDecimal;
 public class ExchangeController {
 
     private Environment environment;
+    private CurrencyExchangeRepo repo;
 
-    public ExchangeController(Environment environment) {
+    public ExchangeController(Environment environment, CurrencyExchangeRepo repo) {
         this.environment = environment;
+        this.repo = repo;
     }
 
     @GetMapping("/currency-exchange/from/{from}/to/{to}")
@@ -21,10 +23,7 @@ public class ExchangeController {
             @PathVariable String from,
             @PathVariable String to){
 
-
-        CurrencyExchange currencyExchange = new CurrencyExchange(
-                1L, "USD", "RON", BigDecimal.valueOf(4.5));
-
+        CurrencyExchange currencyExchange = repo.getByFromAndTo(from, to);
         currencyExchange.setEnvironment(environment.getProperty("local.server.port"));
 
         return currencyExchange;
